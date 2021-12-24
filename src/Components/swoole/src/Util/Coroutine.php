@@ -15,7 +15,7 @@ class Coroutine extends \Swoole\Coroutine
      */
     public static function isIn(): bool
     {
-        return static::getuid() > -1;
+        return static::getCid() > -1;
     }
 
     /**

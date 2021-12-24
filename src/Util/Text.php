@@ -1,5 +1,7 @@
 <?php
 
+# macro
+
 declare(strict_types=1);
 
 namespace Imi\Util;
@@ -20,14 +22,20 @@ class Text
     {
         if ($caseSensitive)
         {
+            #if \PHP_VERSION_ID >= 80000
+            #if 0
             if (\PHP_VERSION_ID >= 80000)
             {
+                #endif
                 return str_starts_with($string, $compare);
+            #if 0
             }
             else
             {
                 return 0 === strpos($string, $compare);
             }
+            #endif
+            #endif
         }
         else
         {
@@ -42,14 +50,20 @@ class Text
     {
         if ($caseSensitive)
         {
+            #if \PHP_VERSION_ID >= 80000
+            #if 0
             if (\PHP_VERSION_ID >= 80000)
             {
+                #endif
                 return str_ends_with($string, $compare);
+            #if 0
             }
             else
             {
                 return $compare === strrchr($string, $compare);
             }
+            #endif
+            #endif
         }
         else
         {

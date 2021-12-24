@@ -22,19 +22,17 @@ class Text
     {
         if ($caseSensitive)
         {
-            #if \PHP_VERSION_ID >= 80000
-            #if 0
+            #if \PHP_VERSION_ID < 80000
             if (\PHP_VERSION_ID >= 80000)
             {
-                #endif
                 return str_starts_with($string, $compare);
-            #if 0
             }
             else
             {
+                #endif
                 return 0 === strpos($string, $compare);
+                #if \PHP_VERSION_ID < 80000
             }
-            #endif
             #endif
         }
         else
@@ -50,19 +48,17 @@ class Text
     {
         if ($caseSensitive)
         {
-            #if \PHP_VERSION_ID >= 80000
-            #if 0
+            #if \PHP_VERSION_ID < 80000
             if (\PHP_VERSION_ID >= 80000)
             {
-                #endif
                 return str_ends_with($string, $compare);
-            #if 0
             }
             else
             {
+                #endif
                 return $compare === strrchr($string, $compare);
+                #if \PHP_VERSION_ID < 80000
             }
-            #endif
             #endif
         }
         else

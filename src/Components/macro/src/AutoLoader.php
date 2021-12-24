@@ -24,9 +24,9 @@ class AutoLoader extends ClassLoader
     }
 
     /**
-     * {@inheritDoc}
+     * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         return $this->composerClassLoader->$name(...$arguments);
     }

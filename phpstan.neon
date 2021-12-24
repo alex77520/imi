@@ -39,7 +39,8 @@ parameters:
         - '#Property Grpc\\[^:]+::\$\S+ has no typehint specified.#'
         - '#Method GPBMetadata\\Grpc::initOnce\(\) has no return typehint specified.#'
         - '#PHPDoc tag @throws with type \S+ is not subtype of Throwable#'
-        - '#Constant IMI_PATH not found.#'
+        - '#Imi\\Swoole\\Util\\Coroutine#'
+        - '#Imi\\Swoole\\Process\\Process#'
         -
             message: '#Method \S+ has no return typehint specified.#'
             paths:

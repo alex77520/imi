@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace Imi\Swoole\Process;
@@ -19,12 +18,17 @@ class Process extends \Swoole\Process
 
         return $this->write($message);
     }
+
+    #if version_compare(SWOOLE_VERSION, '4.9', '>=') && version_compare(PHP_VERSION, '8.0', '>=')
+    public function exit(int $exitCode = 0): void
+    #else
     /**
      * @param int|null $exitCode
      *
      * @return mixed
      */
     public function exit($exitCode = null)
+    #endif
     {
         if ($this->pid > 0)
         {

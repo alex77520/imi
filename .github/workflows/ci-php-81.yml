@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         php: [8.1]
-        swoole: [2ec7a2b39f7ec163847a233629c52f577fe9a443]
+        swoole: [a4eabd817d0745b66a65e6cd156e4900efe9e409]
         roadrunner: [2.5.*]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

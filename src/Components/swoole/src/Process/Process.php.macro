@@ -32,7 +32,7 @@ class Process extends \Swoole\Process
     {
         if ($this->pid > 0)
         {
-            return parent::exit($exitCode);
+            parent::exit($exitCode);
         }
         else
         {

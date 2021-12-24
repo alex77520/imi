@@ -41,6 +41,7 @@ parameters:
         - '#PHPDoc tag @throws with type \S+ is not subtype of Throwable#'
         - '#Imi\\Swoole\\Util\\Coroutine#'
         - '#Imi\\Swoole\\Process\\Process#'
+        - '#IMI_PATH#'
         -
             message: '#Method \S+ has no return typehint specified.#'
             paths:

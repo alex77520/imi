@@ -13,5 +13,3 @@ composer.lock
 /.vscode
 *.pid
 *.macro.php
-/src/Components/swoole/src/Util/Coroutine.php
-/src/Components/swoole/src/Process/Process.php

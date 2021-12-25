@@ -1,7 +1,5 @@
 <?php
 
-# macro
-
 declare(strict_types=1);
 
 namespace Imi\Swoole\Server\Util\Amqp;
@@ -13,23 +11,24 @@ use Imi\Bean\Annotation\Bean;
 use Imi\RequestContext;
 use Imi\Swoole\Server\Util\AmqpServerUtil;
 
-#if class_exists(\Imi\AMQP\Main::class)
-/**
- * @Bean(name="AmqpServerPublisher", env="swoole")
- */
-class AmqpServerPublisher extends BasePublisher
+if (class_exists(\Imi\AMQP\Main::class))
 {
-    protected AmqpServerUtil $amqpServerUtil;
-
     /**
-     * {@inheritDoc}
+     * @Bean(name="AmqpServerPublisher", env="swoole")
      */
-    public function initConfig(): void
+    class AmqpServerPublisher extends BasePublisher
     {
-        /** @var AmqpServerUtil $amqpServerUtil */
-        $amqpServerUtil = $this->amqpServerUtil = RequestContext::getServerBean('AmqpServerUtil');
-        $this->exchanges = [new Exchange($amqpServerUtil->getExchangeConfig())];
-        $this->poolName = $amqpServerUtil->getAmqpName() ?? AMQPPool::getDefaultPoolName();
+        protected AmqpServerUtil $amqpServerUtil;
+
+        /**
+         * {@inheritDoc}
+         */
+        public function initConfig(): void
+        {
+            /** @var AmqpServerUtil $amqpServerUtil */
+            $amqpServerUtil = $this->amqpServerUtil = RequestContext::getServerBean('AmqpServerUtil');
+            $this->exchanges = [new Exchange($amqpServerUtil->getExchangeConfig())];
+            $this->poolName = $amqpServerUtil->getAmqpName() ?? AMQPPool::getDefaultPoolName();
+        }
     }
 }
-#endif

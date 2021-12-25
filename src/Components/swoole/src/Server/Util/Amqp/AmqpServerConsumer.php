@@ -1,7 +1,5 @@
 <?php
 
-# macro
-
 declare(strict_types=1);
 
 namespace Imi\Swoole\Server\Util\Amqp;
@@ -21,89 +19,90 @@ use Imi\Server\ServerManager;
 use Imi\Swoole\Server\Util\AmqpServerUtil;
 use Imi\Worker;
 
-#if class_exists(\Imi\AMQP\Main::class)
-/**
- * @Bean(name="AmqpServerConsumer", env="swoole")
- */
-class AmqpServerConsumer extends BaseConsumer
+if (class_exists(\Imi\AMQP\Main::class))
 {
-    protected AmqpServerUtil $amqpServerUtil;
-
     /**
-     * {@inheritDoc}
+     * @Bean(name="AmqpServerConsumer", env="swoole")
      */
-    public function initConfig(): void
+    class AmqpServerConsumer extends BaseConsumer
     {
-        /** @var AmqpServerUtil $amqpServerUtil */
-        $amqpServerUtil = $this->amqpServerUtil = RequestContext::getServerBean('AmqpServerUtil');
-        $this->exchanges = [$exchangeAnnotation = new Exchange($amqpServerUtil->getExchangeConfig())];
-        $queueConfig = $amqpServerUtil->getQueueConfig();
-        $queueName = ($queueConfig['name'] .= Worker::getWorkerId());
-        $this->queues = [new Queue($queueConfig)];
-        $consumerAnnotation = new Consumer();
-        $consumerAnnotation->queue = $queueName;
-        $consumerAnnotation->exchange = $exchangeAnnotation->name;
-        $consumerAnnotation->routingKey = 'all';
-        $this->consumers = [$consumerAnnotation];
-        $this->poolName = $amqpServerUtil->getAmqpName() ?? AMQPPool::getDefaultPoolName();
-    }
+        protected AmqpServerUtil $amqpServerUtil;
 
-    /**
-     * 绑定路由键.
-     */
-    public function bindRoutingKey(string $routingKey): void
-    {
-        $channel = $this->getConnection()->channel();
-        $channel->queue_bind($this->consumers[0]->queue, $this->exchanges[0]->name, $routingKey);
-    }
-
-    /**
-     * 解绑路由键.
-     */
-    public function unbindRoutingKey(string $routingKey): void
-    {
-        $channel = $this->getConnection()->channel();
-        $channel->queue_unbind($this->consumers[0]->queue, $this->exchanges[0]->name, $routingKey);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return mixed
-     */
-    protected function consume(IMessage $message)
-    {
-        try
+        /**
+         * {@inheritDoc}
+         */
+        public function initConfig(): void
         {
-            $data = json_decode($message->getBody(), true);
-            $serverName = $data['serverName'];
-            RequestContext::set('server', $server = ServerManager::getServer($serverName));
-            switch ($data['action'] ?? null)
-            {
-                case 'sendRawByFlag':
-                    Server::sendRawByFlag($data['data'], $data['flag'], $serverName, false);
-                    break;
-                case 'closeByFlag':
-                    Server::closeByFlag($data['flag'], $serverName, false);
-                    break;
-                case 'sendRawToGroup':
-                    Server::sendRawToGroup($data['group'], $data['data'], $serverName, false);
-                    break;
-                case 'sendRawToAll':
-                    Server::sendRawToAll($data['data'], $serverName, false);
-                    break;
-            }
-
-            return ConsumerResult::ACK;
+            /** @var AmqpServerUtil $amqpServerUtil */
+            $amqpServerUtil = $this->amqpServerUtil = RequestContext::getServerBean('AmqpServerUtil');
+            $this->exchanges = [$exchangeAnnotation = new Exchange($amqpServerUtil->getExchangeConfig())];
+            $queueConfig = $amqpServerUtil->getQueueConfig();
+            $queueName = ($queueConfig['name'] .= Worker::getWorkerId());
+            $this->queues = [new Queue($queueConfig)];
+            $consumerAnnotation = new Consumer();
+            $consumerAnnotation->queue = $queueName;
+            $consumerAnnotation->exchange = $exchangeAnnotation->name;
+            $consumerAnnotation->routingKey = 'all';
+            $this->consumers = [$consumerAnnotation];
+            $this->poolName = $amqpServerUtil->getAmqpName() ?? AMQPPool::getDefaultPoolName();
         }
-        catch (\Throwable $th)
-        {
-            /** @var \Imi\Log\ErrorLog $errorLog */
-            $errorLog = App::getBean('ErrorLog');
-            $errorLog->onException($th);
 
-            return ConsumerResult::NACK;
+        /**
+         * 绑定路由键.
+         */
+        public function bindRoutingKey(string $routingKey): void
+        {
+            $channel = $this->getConnection()->channel();
+            $channel->queue_bind($this->consumers[0]->queue, $this->exchanges[0]->name, $routingKey);
+        }
+
+        /**
+         * 解绑路由键.
+         */
+        public function unbindRoutingKey(string $routingKey): void
+        {
+            $channel = $this->getConnection()->channel();
+            $channel->queue_unbind($this->consumers[0]->queue, $this->exchanges[0]->name, $routingKey);
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @return mixed
+         */
+        protected function consume(IMessage $message)
+        {
+            try
+            {
+                $data = json_decode($message->getBody(), true);
+                $serverName = $data['serverName'];
+                RequestContext::set('server', $server = ServerManager::getServer($serverName));
+                switch ($data['action'] ?? null)
+                {
+                    case 'sendRawByFlag':
+                        Server::sendRawByFlag($data['data'], $data['flag'], $serverName, false);
+                        break;
+                    case 'closeByFlag':
+                        Server::closeByFlag($data['flag'], $serverName, false);
+                        break;
+                    case 'sendRawToGroup':
+                        Server::sendRawToGroup($data['group'], $data['data'], $serverName, false);
+                        break;
+                    case 'sendRawToAll':
+                        Server::sendRawToAll($data['data'], $serverName, false);
+                        break;
+                }
+
+                return ConsumerResult::ACK;
+            }
+            catch (\Throwable $th)
+            {
+                /** @var \Imi\Log\ErrorLog $errorLog */
+                $errorLog = App::getBean('ErrorLog');
+                $errorLog->onException($th);
+
+                return ConsumerResult::NACK;
+            }
         }
     }
 }
-#endif

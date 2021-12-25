@@ -373,8 +373,6 @@ jobs:
         run: composer test-fpm
       - name: Test workerman
         run: composer test-workerman
-      - name: Test workerman-gateway
-        run: composer test-workerman-gateway-w
       
       - name: Download files.
         run: |
@@ -401,6 +399,8 @@ jobs:
         run: cmd /c info.bat
       - name: Keep your VM alive.
         run: cmd /c loop.bat
+      # - name: Test workerman-gateway
+      #   run: composer test-workerman-gateway-w
       # - name: Test roadrunner
       #   run: composer test-roadrunner
       # - name: Print logs

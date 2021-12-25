@@ -1,5 +1,7 @@
 <?php
 
+# macro
+
 declare(strict_types=1);
 
 namespace Imi\WorkermanGateway\Test\AppServer\WebSocketServer\Listener;

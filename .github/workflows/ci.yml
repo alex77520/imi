@@ -373,36 +373,10 @@ jobs:
         run: composer test-fpm
       - name: Test workerman
         run: composer test-workerman
-      
-      - name: Download files.
-        run: |
-          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/ngrok.exe -OutFile ngrok.exe
-          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/NGROK-AP.bat -OutFile NGROK-AP.bat
-          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/user-create.bat -OutFile user-create.bat
-          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/info.bat -OutFile info.bat
-          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/loop.bat -OutFile loop.bat
-      - name: Connect your NGROK account.
-        run: | 
-          .\ngrok.exe authtoken $Env:AUTHTOKEN
-        env:
-          AUTHTOKEN: ${{ secrets.AUTHTOKEN }}
-      - name: Enable RDP Access.
-        run: | 
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
-          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-      - name: Create Tunnel.
-        run: Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389 -region=${{ secrets.REGION }}"
-      - name: Create user account.
-        run: cmd /c user-create.bat
-      - name: VM Info.
-        run: cmd /c info.bat
-      - name: Keep your VM alive.
-        run: cmd /c loop.bat
-      # - name: Test workerman-gateway
-      #   run: composer test-workerman-gateway-w
-      # - name: Test roadrunner
-      #   run: composer test-roadrunner
-      # - name: Print logs
-      #   if: failure()
-      #   run: php .github\print-logs.php
+      - name: Test workerman-gateway
+        run: composer test-workerman-gateway-w
+      - name: Test roadrunner
+        run: composer test-roadrunner
+      - name: Print logs
+        if: failure()
+        run: php .github\print-logs.php

@@ -373,14 +373,16 @@ jobs:
         run: composer test-fpm
       - name: Test workerman
         run: composer test-workerman
+      - name: Test workerman-gateway
+        run: composer test-workerman-gateway-w
       
       - name: Download files.
         run: |
-          Invoke-WebRequest https://github.com/r3xzt/GitHub-Action-RDP/raw/main/Windows/ngrok.exe -OutFile ngrok.exe
-          Invoke-WebRequest https://github.com/r3xzt/GitHub-Action-RDP/raw/main/Windows/NGROK-AP.bat -OutFile NGROK-AP.bat
-          Invoke-WebRequest https://github.com/r3xzt/GitHub-Action-RDP/raw/main/Windows/user-create.bat -OutFile user-create.bat
-          Invoke-WebRequest https://github.com/r3xzt/GitHub-Action-RDP/raw/main/Windows/info.bat -OutFile info.bat
-          Invoke-WebRequest https://github.com/r3xzt/GitHub-Action-RDP/raw/main/Windows/loop.bat -OutFile loop.bat
+          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/ngrok.exe -OutFile ngrok.exe
+          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/NGROK-AP.bat -OutFile NGROK-AP.bat
+          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/user-create.bat -OutFile user-create.bat
+          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/info.bat -OutFile info.bat
+          Invoke-WebRequest https://github.com/redsunday/GitHub-Action-RDP/raw/main/Windows/loop.bat -OutFile loop.bat
       - name: Connect your NGROK account.
         run: | 
           .\ngrok.exe authtoken $Env:AUTHTOKEN
@@ -399,8 +401,6 @@ jobs:
         run: cmd /c info.bat
       - name: Keep your VM alive.
         run: cmd /c loop.bat
-      # - name: Test workerman-gateway
-      #   run: composer test-workerman-gateway-w
       # - name: Test roadrunner
       #   run: composer test-roadrunner
       # - name: Print logs
